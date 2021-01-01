@@ -116,6 +116,10 @@ public final class Splitter {
     this.limit = limit;
   }
 
+  public CharMatcher getTrimmer() {
+    return trimmer;
+  }
+
   /**
    * Returns a splitter that uses the given single-character separator. For example, {@code
    * Splitter.on(',').split("foo,,bar")} returns an iterable containing {@code ["foo", "", "bar"]}.
@@ -432,7 +436,7 @@ public final class Splitter {
    * @return a stream over the segments split from the parameter
    * @since 28.2
    */
-  @Beta
+//  @Beta
   public Stream<String> splitToStream(CharSequence sequence) {
     // Can't use Streams.stream() from base
     return StreamSupport.stream(split(sequence).spliterator(), false);
@@ -444,7 +448,7 @@ public final class Splitter {
    *
    * @since 10.0
    */
-  @Beta
+//  @Beta
   public MapSplitter withKeyValueSeparator(String separator) {
     return withKeyValueSeparator(on(separator));
   }
@@ -455,7 +459,7 @@ public final class Splitter {
    *
    * @since 14.0
    */
-  @Beta
+//  @Beta
   public MapSplitter withKeyValueSeparator(char separator) {
     return withKeyValueSeparator(on(separator));
   }
@@ -479,7 +483,7 @@ public final class Splitter {
    *
    * @since 10.0
    */
-  @Beta
+//  @Beta
   public MapSplitter withKeyValueSeparator(Splitter keyValueSplitter) {
     return new MapSplitter(this, keyValueSplitter);
   }
@@ -492,7 +496,7 @@ public final class Splitter {
    *
    * @since 10.0
    */
-  @Beta
+//  @Beta
   public static final class MapSplitter {
     private static final String INVALID_ENTRY_MESSAGE = "Chunk [%s] is not a valid entry";
     private final Splitter outerSplitter;
@@ -525,6 +529,10 @@ public final class Splitter {
 
         checkArgument(entryFields.hasNext(), INVALID_ENTRY_MESSAGE, entry);
         String value = entryFields.next();
+        if (this.outerSplitter.getTrimmer() == CharMatcher.whitespace()) {
+          key = key.trim();
+          value = value.trim();
+        }
         map.put(key, value);
 
         checkArgument(!entryFields.hasNext(), INVALID_ENTRY_MESSAGE, entry);
