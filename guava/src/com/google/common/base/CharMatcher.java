@@ -562,7 +562,9 @@ public abstract class CharMatcher implements Predicate<Character> {
     checkPositionIndex(start, length);
     for (int i = start; i < length; i++) {
       if (matches(sequence.charAt(i))) {
-        return i;
+        if (new PairedBracketChecker(sequence.toString().substring(0, i)).makeCheck()) {
+          return i;
+        }
       }
     }
     return -1;
